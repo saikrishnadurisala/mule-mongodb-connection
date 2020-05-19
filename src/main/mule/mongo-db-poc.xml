@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
+	<flow name="mongo-db-pocFlow" doc:id="c2dfc2d7-acdb-462a-b845-87957ad57723" >
+		<http:listener doc:name="Listener" doc:id="ef904bf4-a11b-4263-9aa8-2f5f7429172c" config-ref="sharedHttpListenerConfig" path="/api/mongo/" allowedMethods="POST"/>
+		<choice doc:name="Choice" doc:id="074e7d84-97d3-4ab3-9d15-2ef1eb3aab7f" >
+			<when expression="#[payload.'action' == 'list_collections']">
+				<mongo:list-collections doc:name="List collections" doc:id="7482bf9e-ac5c-401c-9dc1-a2bd776c350e" config-ref="mongoDbConfig" />
+			</when>
+			<when expression="#[payload.'action' == 'insert_document']">
+				<mongo:insert-document doc:name="Insert document" doc:id="d559a06a-0c72-4f77-9061-f16ce36667c8" config-ref="mongoDbConfig" collectionName="#[payload.'collection']" >
+					<mongo:document ><![CDATA[#[payload.'data']]]></mongo:document>
+				</mongo:insert-document>
+			</when>
+			<otherwise>
+				<raise-error doc:name="Raise error" doc:id="31c4389b-b178-440d-986d-f8b748e30b76" type="APP:INVALID_ACTION"/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="9741f1e8-ec3d-47e2-8a5e-da4c95cd85b7" message="#[payload]" />
+	</flow>
+</mule>

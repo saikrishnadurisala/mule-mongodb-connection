@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
+	<mongo:config name="mongoDbConfig" doc:name="MongoDB Config" doc:id="6bc310ad-5c72-4599-8a4a-74a975f1c752" >
+		<mongo:connection database="#[payload.database]" >
+			<mongo:server-addresses >
+				<mongo:server-address host="localhost" />
+			</mongo:server-addresses>
+		</mongo:connection>
+	</mongo:config>
+</mule>
